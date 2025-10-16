@@ -11,7 +11,29 @@ namespace Kreta1._0
     {
         static void Main(string[] args)
         {
+            User feka = Authorization.LogIn("diakok.txt");
+            Console.WriteLine(feka.Role);
+            while (true)
+            {
+                if (feka.Role == "Tanuló")
+                {
+                    Menu.menu(feka, Tanulo.tanulomenupontok, Tanulo.parancs);
+                    break;
+                }
+                else if (feka.Role == "Tanár")
+                {
+                    Menu.menu(feka, Tanar.menupontok, Tanar.parancs);
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Sikertelen bejelentkezés!");
+                    feka = Authorization.LogIn("diakok.txt");
+                }
+            }
+            
 
+            Console.ReadKey();
         }
     }
 }
