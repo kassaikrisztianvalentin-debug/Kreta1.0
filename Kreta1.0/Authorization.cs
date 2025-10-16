@@ -9,13 +9,14 @@ namespace Kreta1._0
 {
     internal class Authorization
     {
-        
-        public static User LogIn(string Filepath)
+
+        public static List<User> userList = new List<User>();
+        public static HashSet<string> osztalyok = new HashSet<string>();
+        public static List<Tanulo> tanuloList = new List<Tanulo>();
+        public static void fileRead(string Filepath)
         {
-            User user = new User();
-            List<User> userList = new List<User>();
             string[] temp = File.ReadAllLines(Filepath);
-            
+
             foreach (var item in temp)
             {
                 string[] d = item.Split(';');
@@ -26,9 +27,11 @@ namespace Kreta1._0
                     string osztaly = d[1];
                     string password = d[2];
                     string username = d[4];
+                    osztalyok.Add(osztaly);
+                    tanuloList.Add(new Tanulo(username, password, name, osztaly));
                     userList.Add(new Tanulo(username, password, name, osztaly));
                 }
-                else if(role == "Tanar")
+                else if (role == "Tanar")
                 {
                     string name = d[1];
                     string username = d[1].Trim().ToLower();
@@ -37,11 +40,16 @@ namespace Kreta1._0
                     userList.Add(new Tanar(username, password, name, tantargy));
                 }
             }
+        }
+        
+        public static User LogIn(List<User> list)
+        {
+            User user = new User();
             Console.Write("Felhasználónév: ");
             string fnev = Console.ReadLine();
             Console.Write("Jelszó: ");
             string jelszo = Console.ReadLine();
-            foreach (var item in userList)
+            foreach (var item in list)
             {
                 if (item.Username == fnev && item.Password == jelszo)
                 {

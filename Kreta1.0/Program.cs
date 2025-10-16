@@ -11,7 +11,8 @@ namespace Kreta1._0
     {
         static void Main(string[] args)
         {
-            User feka = Authorization.LogIn("diakok.txt");
+            Authorization.fileRead("diakok.txt");
+            User feka = Authorization.LogIn(Authorization.userList);
             Console.WriteLine(feka.Role);
             while (true)
             {
@@ -22,13 +23,13 @@ namespace Kreta1._0
                 }
                 else if (feka.Role == "Tanár")
                 {
-                    Menu.menu(feka, Tanar.menupontok, Tanar.parancs);
+                    Menu.menu(feka, Tanar.tanarmenupontok, Tanar.parancs);
                     break;
                 }
                 else
                 {
                     Console.WriteLine("Sikertelen bejelentkezés!");
-                    feka = Authorization.LogIn("diakok.txt");
+                    feka = Authorization.LogIn(Authorization.userList);
                 }
             }
             

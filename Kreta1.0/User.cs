@@ -28,13 +28,15 @@ namespace Kreta1._0
     public class Tanulo : User
     {
         List<int> jegyek = new List<int>();
-        public static string[] tanulomenupontok = { "Jegyek ", "Átlag ", "Kilépés " };
-        public static Action[] parancs;
+        public static List<string> tanulomenupontok = new List<string>() { "Jegyek ", "Átlag ", "Kilépés " };
+        public static List<Action> parancs = new List<Action>();
         public string Osztaly { get; set; }
         public Tanulo(string username, string password, string name, string osztaly)
              : base(username, password, "Tanuló", name)
         {
-            parancs = new Action[] { () => Jegykiiras() , () => atlag(), () => Authorization.LogIn("belepesiAdat.txt") };
+            parancs.Add(() => Jegykiiras());
+            parancs.Add(() => atlag());
+            parancs.Add(() => Authorization.LogIn(Authorization.userList));
             this.Osztaly = osztaly;
         }
         void Jegykiiras()
@@ -57,15 +59,32 @@ namespace Kreta1._0
     }
     public class Tanar : User
     {
-        public static string[] menupontok = { "Osztályok", "Adataim", "Kijelentkezés" };
-        public static Action[] parancs;
+        public static List<string> tanarmenupontok = new List<string>(){"Osztályok","Adataim","Kijelentkezés"};
+        public static List<Action> parancs = new List<Action>();
         string tantargy;
         public Tanar(string username, string password, string name, string tantargy)
             : base(username, password, "Tanár", name)
         {
-            parancs = new Action[] {() => osztalyok(),  };
+            parancs.Add(() => osztalyok());
+            parancs.Add(() => this.ToString());
+            parancs.Add(() => Authorization.LogIn(Authorization.userList));
         }
         void osztalyok()
+        {
+            List<string> osztalykiiras = new List<string>();
+            var groupbyOsztaly = Authorization.tanuloList.GroupBy(x => x.Osztaly);
+            List<Action> osztalyparancs = new List<Action>();
+            foreach (var item in Authorization.osztalyok)
+            {
+                osztalyparancs.Add(() => tanuloOsztaly(item));
+            }
+            foreach (var item in Authorization.osztalyok)
+            {
+                osztalykiiras.Add(item);
+            }
+            Menu.menu(this, osztalykiiras, osztalyparancs);
+        }
+        void tanuloOsztaly(string osztaly)
         {
 
         }

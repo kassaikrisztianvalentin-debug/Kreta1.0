@@ -5,11 +5,11 @@ namespace Kreta1._0
 {
     internal class Menu
     {
-        public static void menu(User current, string[] menutext, Action[] parancs)
+        public static void menu(User current, List<string> menutext, List<Action> parancs)
         {
             int index = 0;
-            List<string> menuT = new List<string>(menutext);
-            List<Action> menuP = new List<Action>(parancs);
+            List<string> menuT = menutext;
+            List<Action> menuP = parancs;
 
             void menukiiras()
             {
@@ -48,6 +48,8 @@ namespace Kreta1._0
                         menuP[index].Invoke();
                         beker = false;
                         break;
+                    default:
+                        continue;
                 }
             }
         }
