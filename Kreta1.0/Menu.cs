@@ -5,7 +5,7 @@ namespace Kreta1._0
 {
     internal class Menu
     {
-        public static void menu(User current, List<string> menutext, List<Action> parancs)
+        public static void menu(User current, List<string> menutext, List<Action> parancs, int hossz)
         {
             int index = 0;
             List<string> menuT = menutext;
@@ -36,12 +36,12 @@ namespace Kreta1._0
                 {
                     case ConsoleKey.UpArrow:
                         index--;
-                        if (index < 0) index = menuT.Count - 1;
+                        if (index < 0) index = hossz - 1;
                         break;
 
                     case ConsoleKey.DownArrow:
                         index++;
-                        if (index >= menuT.Count) index = 0;
+                        if (index >= hossz) index = 0;
                         break;
 
                     case ConsoleKey.Enter:

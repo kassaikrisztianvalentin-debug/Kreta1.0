@@ -13,6 +13,8 @@ namespace Kreta1._0
         public static List<User> userList = new List<User>();
         public static HashSet<string> osztalyok = new HashSet<string>();
         public static List<Tanulo> tanuloList = new List<Tanulo>();
+
+        public static HashSet<string> tantagyak = new HashSet<string>();
         public static void fileRead(string Filepath)
         {
             string[] temp = File.ReadAllLines(Filepath);
@@ -37,19 +39,22 @@ namespace Kreta1._0
                     string username = d[1].Trim().ToLower();
                     string password = d[0];
                     string tantargy = d[2];
+
+                    tantagyak.Add(tantargy);
                     userList.Add(new Tanar(username, password, name, tantargy));
                 }
             }
         }
         
-        public static User LogIn(List<User> list)
+        public static User LogIn()
         {
+            Console.Clear();
             User user = new User();
             Console.Write("Felhasználónév: ");
             string fnev = Console.ReadLine();
             Console.Write("Jelszó: ");
             string jelszo = Console.ReadLine();
-            foreach (var item in list)
+            foreach (var item in userList)
             {
                 if (item.Username == fnev && item.Password == jelszo)
                 {
