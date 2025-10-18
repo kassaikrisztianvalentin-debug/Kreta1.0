@@ -20,11 +20,11 @@ namespace Kreta1._0
             Environment.Exit(0);
         }
         // Filepath
-        public static void betolt(List<Jegy> jegyek)
+        public static void betolt(string Filepath)
         {
-            if (File.Exists("jegyek.txt"))
+            if (File.Exists(Filepath))
             {
-                string[] temp = File.ReadAllLines("jegyek.txt");
+                string[] temp = File.ReadAllLines(Filepath);
                 foreach (var item in temp)
                 {
                     string[] d = item.Split(';');
@@ -33,7 +33,7 @@ namespace Kreta1._0
                     DateTime datum = DateTime.Parse(d[2]);
                     string tanarNeve = d[3];
                     string tanuloNeve = d[4];
-                    jegyek.Add(new Jegy(tantargy, ertek, datum, tanarNeve, tanuloNeve));
+                    Tanulo.jegyek.Add(new Jegy(tantargy, ertek, datum, tanarNeve, tanuloNeve));
                 }
             }
         }

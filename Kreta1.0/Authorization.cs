@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
-using System.IO;
 
 namespace Kreta1._0
 {
@@ -45,25 +46,28 @@ namespace Kreta1._0
                 }
             }
         }
-        
+
         public static User LogIn()
         {
             Console.Clear();
-            User user = new User();
+
             Console.Write("Felhasználónév: ");
             string fnev = Console.ReadLine();
             Console.Write("Jelszó: ");
             string jelszo = Console.ReadLine();
+
             foreach (var item in userList)
             {
                 if (item.Username == fnev && item.Password == jelszo)
                 {
-                    Console.WriteLine("Sikeres bejentkezés!");
-                    user = item;
-                    return user;
+                    Console.WriteLine("Sikeres bejelentkezés!");
+                    return item;
                 }
             }
-            return user;
+
+            Console.WriteLine("Sikertelen bejelentkezés!");
+            Thread.Sleep(1000);
+            return null;
         }
     }
 }

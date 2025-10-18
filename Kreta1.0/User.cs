@@ -29,8 +29,9 @@ namespace Kreta1._0
     public class Tanulo : User
     {
         public static List<Jegy> jegyek = new List<Jegy>();
+        public static List<Jegy> jegyekA = new List<Jegy>();
         public static List<string> tanulomenupontok = new List<string>() { "Jegyek ", "Átlag ", "Kijelentkezés", "Kilépés" };
-        public static List<Action> parancs = new List<Action>();
+        public List<Action> parancs = new List<Action>();
         public string Osztaly { get; set; }
         public Tanulo(string username, string password, string name, string osztaly)
              : base(username, password, "Tanuló", name)
@@ -56,7 +57,7 @@ namespace Kreta1._0
                 tantargyparancs.Add(() => jegyekTantargy(item));
             }
             tantargykiiras.Add("Vissza");
-            tantargyparancs.Add(() => Menu.menu(this, Tanulo.tanulomenupontok, Tanulo.parancs, Tanulo.tanulomenupontok.Count));
+            tantargyparancs.Add(() => Menu.menu(this, Tanulo.tanulomenupontok, this.parancs, Tanulo.tanulomenupontok.Count));
             Menu.menu(this, tantargykiiras, tantargyparancs, tantargyparancs.Count);
         }
         void jegyekTantargy(string tantargy)
@@ -66,7 +67,7 @@ namespace Kreta1._0
             List<int> atlagList = new List<int>();
             foreach (var item in jegyek)
             {
-                if (item.Tantargy == tantargy)
+                if (item.Tantargy == tantargy && item.TanuloNeve == Name)
                 {
                     jegyekkiiras.Add($"{item.Tantargy}  -  {item.Datum:d}  -  {item.TanarNeve}  -  {item.Ertek}");
                     jegyekparancs.Add(() => jegyBovebben(item));
@@ -114,7 +115,7 @@ namespace Kreta1._0
     public class Tanar : User
     {
         public static List<string> tanarmenupontok = new List<string>(){"Osztályok","Adataim","Kijelentkezés", "Kilépés"};
-        public static List<Action> parancs = new List<Action>();
+        public List<Action> parancs = new List<Action>();
         string tantargy;
         public Tanar(string username, string password, string name, string tantargy)
             : base(username, password, "Tanár", name)
@@ -138,7 +139,7 @@ namespace Kreta1._0
                 osztalykiiras.Add(item);
             }
             osztalykiiras.Add("Vissza");
-            osztalyparancs.Add(() => Menu.menu(this, Tanar.tanarmenupontok, Tanar.parancs, Tanar.tanarmenupontok.Count));
+            osztalyparancs.Add(() => Menu.menu(this, Tanar.tanarmenupontok, this.parancs, Tanar.tanarmenupontok.Count));
             Menu.menu(this, osztalykiiras, osztalyparancs, osztalyparancs.Count);
         }
         void tanuloOsztaly(string osztaly)
@@ -170,7 +171,7 @@ namespace Kreta1._0
             List<Action> jegyekparancs = new List<Action>();
             foreach (var item in Tanulo.jegyek)
             {
-                if (item.TanuloNeve == tanulo.Name)
+                if (item.TanuloNeve == tanulo.Name && item.TanarNeve == Name)
                 {
                     jegyekkiiras.Add($"{item.Tantargy}  -  {item.Datum:d}  -  {item.TanarNeve}  -  {item.Ertek}");
                     jegyekparancs.Add(() => jegyFunkciok(item));
@@ -186,7 +187,8 @@ namespace Kreta1._0
         {
             Console.Write("Kérem a jegyet (1-5): ");
             int jegy = int.Parse(Console.ReadLine());
-            Tanulo.jegyek.Add(new Jegy(this.tantargy ,jegy, DateTime.Now, this.Name, tanulo.Name));
+            //tanulo.jegyek.Add(new Jegy(this.tantargy ,jegy, DateTime.Now, this.Name, tanulo.Name));
+            Tanulo.jegyek.Add(new Jegy(this.tantargy, jegy, DateTime.Now, this.Name, tanulo.Name));
             Console.WriteLine("Sikeres jegybeírás!");
             Thread.Sleep(1000);
             tanuloFunkciok(tanulo);
@@ -209,6 +211,7 @@ namespace Kreta1._0
         }
         void jegyTorles(Jegy jegy)
         {
+            Tanulo.jegyek.Remove(jegy);
             Tanulo.jegyek.Remove(jegy);
             Console.WriteLine("Sikeres jegytörlés!");
             Thread.Sleep(1000);

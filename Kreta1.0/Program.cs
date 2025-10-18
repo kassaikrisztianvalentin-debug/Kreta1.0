@@ -12,7 +12,7 @@ namespace Kreta1._0
         static void Main(string[] args)
         {
             Authorization.fileRead("diakok.txt");
-            Save.betolt(Tanulo.jegyek);
+            Save.betolt("jegyek.txt");
             bejelentkezes();
 
 
@@ -20,23 +20,45 @@ namespace Kreta1._0
         }
         public static void bejelentkezes()
         {
-            User feka = Authorization.LogIn();
-            while (true)
+            User feka = null;
+
+            while (feka == null)
             {
+                feka = Authorization.LogIn();
+
+                if (feka == null)
+                {
+                    continue;
+                }
+
                 if (feka.Role == "Tanuló")
                 {
-                    Menu.menu(feka, Tanulo.tanulomenupontok, Tanulo.parancs, Tanulo.tanulomenupontok.Count);
-                    break;
+                    Tanulo tanulo = feka as Tanulo;
+                    if (tanulo != null)
+                    {
+                        Menu.menu(tanulo, Tanulo.tanulomenupontok, tanulo.parancs, Tanulo.tanulomenupontok.Count);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Hiba: A felhasználó nem Tanuló típusú.");
+                    }
                 }
                 else if (feka.Role == "Tanár")
                 {
-                    Menu.menu(feka, Tanar.tanarmenupontok, Tanar.parancs, Tanar.tanarmenupontok.Count);
-                    break;
+                    Tanar tanar = feka as Tanar;
+                    if (tanar != null)
+                    {
+                        Menu.menu(feka, Tanar.tanarmenupontok, tanar.parancs, Tanar.tanarmenupontok.Count);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Hiba: A felhasználó nem Tanár típusú.");
+                    }
                 }
                 else
                 {
-                    Console.WriteLine("Sikertelen bejelentkezés!");
-                    feka = Authorization.LogIn();
+                    Console.WriteLine("Ismeretlen szerepkör!");
+                    feka = null;
                 }
             }
         }
