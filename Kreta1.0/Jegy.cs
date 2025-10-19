@@ -23,4 +23,21 @@ namespace Kreta1._0
             this.TanuloNeve = tanuloNeve;
         }
     }
+    public class Into
+    {
+        public string TanarNeve { get; set; }
+        public string TanuloNeve { get; set; }
+        public DateTime Datum { get; set; }
+        public string Szoveg { get; set; }
+        public string Fokozat { get;set; }
+
+        public Into(string tanarNeve, string tanuloNeve, DateTime datum, string szoveg, string fokozat)
+        {
+            TanarNeve = tanarNeve;
+            TanuloNeve = tanuloNeve;
+            Datum = datum;
+            this.Szoveg = szoveg;
+            Fokozat = Fokozat;
+        }
+    }
 }

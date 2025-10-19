@@ -29,17 +29,23 @@ namespace Kreta1._0
     public class Tanulo : User
     {
         public static List<Jegy> jegyek = new List<Jegy>();
-        public static List<Jegy> jegyekA = new List<Jegy>();
-        public static List<string> tanulomenupontok = new List<string>() { "Jegyek ", "Átlag ", "Kijelentkezés", "Kilépés" };
+        public static List<Into> Intok = new List<Into>();
+        public static List<string> tanulomenupontok = new List<string>() { "Jegyek ", "Beírások", "Átlag ", "Kijelentkezés", "Kilépés" };
         public List<Action> parancs = new List<Action>();
         public string Osztaly { get; set; }
+
         public Tanulo(string username, string password, string name, string osztaly)
-             : base(username, password, "Tanuló", name)
+           : base(username, password, "Tanuló", name)
         {
             parancs.Add(() => Értékelések());
+            parancs.Add(() => beirasok());
             parancs.Add(() => atlag());
             parancs.Add(() => Program.bejelentkezes());
-            parancs.Add(() => Save.mentes(jegyek));
+            parancs.Add(() =>
+            {
+                Save.mentes(jegyek);
+                Save.mentes(Intok);
+            });
             this.Osztaly = osztaly;
         }
 
@@ -110,6 +116,26 @@ namespace Kreta1._0
         {
             return 1.0;
         }
+        void beirasok()
+        {
+            List<string> beirasok = new List<string>();
+            List<Action> beirasokParancs = new List<Action>();
+            foreach (var item in Intok)
+            {
+                if (item.TanuloNeve == Name)
+                {
+                    beirasok.Add($"{item.TanarNeve} - {item.Datum} - {item.Fokozat} - {item.Szoveg}");
+                    beirasokParancs.Add(() => beirasBovebben(item));
+                }
+            }
+            beirasok.Add("Vissza");
+            beirasokParancs.Add(() => Menu.menu(this, Tanulo.tanulomenupontok, this.parancs, Tanulo.tanulomenupontok.Count));
+            Menu.menu(this, beirasok, beirasokParancs, beirasokParancs.Count);
+        }
+        void beirasBovebben(Into into)
+        {
+
+        }
 
     }
     public class Tanar : User
@@ -162,7 +188,7 @@ namespace Kreta1._0
         void tanuloFunkciok(Tanulo tanulo)
         {
             List<string> tanulofunkciokkiiras = new List<string>() { "Jegybeírás", "Intő", "Mulasztás", "Jegyek", "Vissza" };
-            List<Action> tanulofunkciokparancs = new List<Action>() { () => jegybeiras(tanulo), () => Into(), () => mulasztas(), () => tanuloJegyek(tanulo),() => osztalyok()};
+            List<Action> tanulofunkciokparancs = new List<Action>() { () => jegybeiras(tanulo), () => Into(tanulo), () => mulasztas(), () => tanuloJegyek(tanulo),() => osztalyok()};
             Menu.menu(this, tanulofunkciokkiiras, tanulofunkciokparancs, tanulofunkciokparancs.Count);
         }
         void tanuloJegyek(Tanulo tanulo)
@@ -217,9 +243,18 @@ namespace Kreta1._0
             Thread.Sleep(1000);
             osztalyok();
         }
-        void Into()
+        void Into(Tanulo tanulo)
         {
-            //intő beírás logika
+            Console.Clear();
+            string[] intok = new string[]{"Szóbeli intő", "Osztályfőnöki intő", "Szakmai tanári intő", "Igazgatói intő", "Igazgatói megrovás"};
+            Console.WriteLine("1. Szóbeli intő\n2. Osztályfőnöki intő\n3. Szakmai tanári intő\n4. Igazgatói intő\n5. Igazgatói megrovás");
+            int beInto = int.Parse(Console.ReadLine());
+            Console.Write("A beírás szövege: ");
+            string szoveg = Console.ReadLine();
+            Tanulo.Intok.Add(new Into(this.Name, tanulo.Name, DateTime.Now, szoveg, intok[beInto - 1]));
+            Console.WriteLine("Sikeres rögzítés!");
+            Thread.Sleep(1000);
+            osztalyok();
         }
         void mulasztas()
         {

@@ -12,6 +12,7 @@ namespace Kreta1._0
         static void Main(string[] args)
         {
             Authorization.fileRead("diakok.txt");
+            Save.betolt("intok.txt");
             Save.betolt("jegyek.txt");
             bejelentkezes();
 
