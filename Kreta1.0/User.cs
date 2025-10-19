@@ -49,6 +49,7 @@ namespace Kreta1._0
             this.Osztaly = osztaly;
         }
 
+
         public Tanulo()
         {
         }
