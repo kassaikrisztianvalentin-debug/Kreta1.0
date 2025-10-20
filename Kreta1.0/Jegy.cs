@@ -37,7 +37,7 @@ namespace Kreta1._0
             TanuloNeve = tanuloNeve;
             Datum = datum;
             this.Szoveg = szoveg;
-            Fokozat = Fokozat;
+            Fokozat = fokozat;
         }
     }
 }

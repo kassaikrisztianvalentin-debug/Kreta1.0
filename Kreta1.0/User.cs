@@ -45,6 +45,7 @@ namespace Kreta1._0
             {
                 Save.mentes(jegyek);
                 Save.mentes(Intok);
+                Environment.Exit(0);
             });
             this.Osztaly = osztaly;
         }
@@ -150,7 +151,12 @@ namespace Kreta1._0
             parancs.Add(() => osztalyok());
             parancs.Add(() => this.ToString());
             parancs.Add(() => Program.bejelentkezes());
-            parancs.Add(() => Save.mentes(Tanulo.jegyek));
+            parancs.Add(() =>
+            {
+                Save.mentes(Tanulo.jegyek);
+                Save.mentes(Tanulo.Intok);
+                Environment.Exit(0);
+            });
             this.tantargy = tantargy;
         }
         void osztalyok()
@@ -210,6 +216,7 @@ namespace Kreta1._0
             Menu.menu(this, jegyekkiiras, jegyekparancs, jegyekparancs.Count);
         }
         // static List<Jegy> jegyek = new List<Jegy>();
+        #region jegy
         void jegybeiras(Tanulo tanulo)
         {
             Console.Write("Kérem a jegyet (1-5): ");
@@ -244,10 +251,23 @@ namespace Kreta1._0
             Thread.Sleep(1000);
             osztalyok();
         }
+#endregion
+
+        void mulasztas()
+        {
+            //mulasztás beírás logika
+        }
+        #region into
         void Into(Tanulo tanulo)
         {
+            List<string> intokkiiras = new List<string>() { "Beírás", "Tanuló intői", "Vissza"};
+            List<Action> intokparancs = new List<Action>() { () => Intobeiras(tanulo), () =>  IntoKiiras(tanulo), () => tanuloFunkciok(tanulo)};
+            Menu.menu(this, intokkiiras, intokparancs, intokparancs.Count);
+        }
+        void Intobeiras(Tanulo tanulo)
+        {
             Console.Clear();
-            string[] intok = new string[]{"Szóbeli intő", "Osztályfőnöki intő", "Szakmai tanári intő", "Igazgatói intő", "Igazgatói megrovás"};
+            string[] intok = new string[] { "Szóbeli intő", "Osztályfőnöki intő", "Szakmai tanári intő", "Igazgatói intő", "Igazgatói megrovás" };
             Console.WriteLine("1. Szóbeli intő\n2. Osztályfőnöki intő\n3. Szakmai tanári intő\n4. Igazgatói intő\n5. Igazgatói megrovás");
             int beInto = int.Parse(Console.ReadLine());
             Console.Write("A beírás szövege: ");
@@ -257,10 +277,51 @@ namespace Kreta1._0
             Thread.Sleep(1000);
             osztalyok();
         }
-        void mulasztas()
+        void IntoKiiras(Tanulo tanulo)
         {
-            //mulasztás beírás logika
+            List<string> intokkiirasstring = new List<string>();
+            List<Action> intokparancs = new List<Action>();
+            foreach (var item in Tanulo.Intok)
+            {
+                if (item.TanuloNeve == tanulo.Name && item.TanarNeve == Name)
+                {
+                    intokkiirasstring.Add($"{item.TanarNeve} - {item.Datum} - {item.Fokozat} - {item.Szoveg}");
+                    intokparancs.Add(() => intoFunkciok(item));
+                }
+            }
+            intokkiirasstring.Add("Vissza");
+            intokparancs.Add(() => tanuloFunkciok(tanulo));
+            Menu.menu(this, intokkiirasstring, intokparancs, intokparancs.Count);
         }
+        void intoFunkciok(Into into)
+        {
+            Console.Clear();
+            List<string> jegyFunkciokiiras = new List<string>() { "Jegy módosítása", "Jegy törlése", "Vissza" };
+            List<Action> jegyFunkcioparancs = new List<Action>() { () => intoModositas(into), () => intoTorles(into), () => osztalyok() };
+            Menu.menu(this, jegyFunkciokiiras, jegyFunkcioparancs, jegyFunkcioparancs.Count);
+        }
+        void intoModositas(Into into)
+        {
+            string[] intok = new string[] { "Szóbeli intő", "Osztályfőnöki intő", "Szakmai tanári intő", "Igazgatói intő", "Igazgatói megrovás" };
+            Console.WriteLine("1. Szóbeli intő\n2. Osztályfőnöki intő\n3. Szakmai tanári intő\n4. Igazgatói intő\n5. Igazgatói megrovás");
+            int beInto = int.Parse(Console.ReadLine());
+            into.Fokozat = intok[beInto-1];
+            Console.Write("Szöveg: ");
+            string szoveg = Console.ReadLine();
+            into.Fokozat = szoveg;
+            Console.WriteLine("Sikeres jegymódosítás!");
+            Thread.Sleep(1000);
+            osztalyok();
+        }
+        void intoTorles(Into into)
+        {
+            Tanulo.Intok.Remove(into);
+            Tanulo.Intok.Remove(into);
+            Console.WriteLine("Sikeres jegytörlés!");
+            Thread.Sleep(1000);
+            osztalyok();
+        }
+        #endregion
 
         public override string ToString()
         {

@@ -27,8 +27,6 @@ namespace Kreta1._0
                     }
                 }
             }
-
-            Environment.Exit(0);
         }
 
         // Filepath
@@ -51,7 +49,7 @@ namespace Kreta1._0
                     }
                     else if (Filepath == "intok.txt")
                     {
-                        string[] d = item.Split();
+                        string[] d = item.Split(';');
                         string tanarNeve = d[0];
                         string tanuloNeve = d[1];
                         DateTime datum = DateTime.Parse(d[2]);
