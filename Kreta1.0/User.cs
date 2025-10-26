@@ -144,7 +144,7 @@ namespace Kreta1._0
     {
         public static List<string> tanarmenupontok = new List<string>(){"Osztályok","Adataim","Kijelentkezés", "Kilépés"};
         public List<Action> parancs = new List<Action>();
-        string tantargy;
+        string tantargy { get; set; }
         public Tanar(string username, string password, string name, string tantargy)
             : base(username, password, "Tanár", name)
         {

@@ -16,6 +16,8 @@ namespace Kreta1._0
         public static List<Tanulo> tanuloList = new List<Tanulo>();
 
         public static HashSet<string> tantagyak = new HashSet<string>();
+
+        public static List<Tanar> tanarList = new List<Tanar>();
         public static void fileRead(string Filepath)
         {
             string[] temp = File.ReadAllLines(Filepath);
@@ -42,6 +44,7 @@ namespace Kreta1._0
                     string tantargy = d[2];
 
                     tantagyak.Add(tantargy);
+                    tanarList.Add(new Tanar(username, password, name, tantargy));
                     userList.Add(new Tanar(username, password, name, tantargy));
                 }
             }
