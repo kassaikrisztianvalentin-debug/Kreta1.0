@@ -29,7 +29,6 @@ namespace Kreta1._0
             }
         }
 
-        // Filepath
         public static void betolt(string Filepath)
         {
             if (File.Exists(Filepath))

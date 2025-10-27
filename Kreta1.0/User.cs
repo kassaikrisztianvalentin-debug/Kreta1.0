@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace Kreta1._0
 {
@@ -142,9 +143,9 @@ namespace Kreta1._0
     }
     public class Tanar : User
     {
-        public static List<string> tanarmenupontok = new List<string>(){"Osztályok","Adataim","Kijelentkezés", "Kilépés"};
+        public static List<string> tanarmenupontok = new List<string>(){"Osztályok","Adataim", "Kijelentkezés", "Kilépés"};
         public List<Action> parancs = new List<Action>();
-        string tantargy { get; set; }
+        public string tantargy { get; set; }
         public Tanar(string username, string password, string name, string tantargy)
             : base(username, password, "Tanár", name)
         {
@@ -159,6 +160,7 @@ namespace Kreta1._0
             });
             this.tantargy = tantargy;
         }
+
         void osztalyok()
         {
             List<string> osztalykiiras = new List<string>();
@@ -175,19 +177,21 @@ namespace Kreta1._0
             osztalyparancs.Add(() => Menu.menu(this, Tanar.tanarmenupontok, this.parancs, Tanar.tanarmenupontok.Count));
             Menu.menu(this, osztalykiiras, osztalyparancs, osztalyparancs.Count);
         }
-        void tanuloOsztaly(string osztaly)
+        void tanuloOsztaly(string Osztaly)
         {
             List<string> tanuloosztalyszerint = new List<string>();
             List<Action> tanuloosztalyparancs = new List<Action>();
-            Console.WriteLine($"{osztaly} osztály");
+            Console.WriteLine($"{Osztaly} osztály");
             foreach (var item in Authorization.tanuloList)
             {
-                if (item.Osztaly == osztaly)
+                if (item.Osztaly == Osztaly)
                 {
                     tanuloosztalyszerint.Add(item.Name);
                     tanuloosztalyparancs.Add(() => tanuloFunkciok(item));
                 }
             }
+            tanuloosztalyszerint.Add("Órarend");
+            tanuloosztalyparancs.Add(() => Timetablea(Osztaly));
             tanuloosztalyszerint.Add("Vissza");
             tanuloosztalyparancs.Add(() => osztalyok());
             Menu.menu(this, tanuloosztalyszerint, tanuloosztalyparancs, tanuloosztalyparancs.Count);
@@ -322,7 +326,31 @@ namespace Kreta1._0
             osztalyok();
         }
         #endregion
-
+        void Timetablea(string osztaly)
+        {
+            Timetable.CreateTimetable();
+            List<string> timetablestring = new List<string>();
+            List<Action> timetableparancs = new List<Action>();
+            timetablestring.Add("\tHétfő\t|\tKedd\t|\tSzerda\t|\tCsütörtök\t|\tPéntek");
+            foreach (var item in Timetable.timetable)
+            {
+                if (item.Osztaly == osztaly)
+                {
+                    foreach (var day in new[] { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" })
+                    {
+                        for (int hour = 1; hour <= 8; hour++)
+                        {
+                            if (item.DayOfWeek == day && item.HourOfDay == hour)
+                            {
+                                timetablestring.Add($"{hour}{item.Teacher}\n{item.Osztaly}\n{item.DayOfWeek}:{item.HourOfDay}\n{item.Terem}\n{item.Subject}");
+                                timetableparancs.Add(() => Timetablea(osztaly));
+                            }
+                        }
+                    }
+                }
+                Menu.menu(this, timetablestring, timetableparancs, timetableparancs.Count);
+            }
+        }
         public override string ToString()
         {
             return $"Név: {Name}\nFelhasználónév: {Username}\nJelszó: {Password}Tantárgy: {tantargy}";

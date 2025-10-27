@@ -11,20 +11,22 @@ namespace Kreta1._0
         public string Osztaly { get; set; }
         public string DayOfWeek { get; set; }
         public string Subject { get; set; }
-        public string HourOfDay { get; set; }
+        public int Terem { get; set; }
+        public int HourOfDay { get; set; }
         public string Teacher { get; set; }
-        public Timetable(string osztaly, string dayOfWeek, string subject, string hourofday, string teacher)
+        public Timetable(string osztaly, string dayOfWeek, string subject, int terem, int hourofday, string teacher)
         {
             Osztaly = osztaly;
             DayOfWeek = dayOfWeek;
             Subject = subject;
+            Terem = terem;
             HourOfDay = hourofday;
             Teacher = teacher;
         }
 
+        public static List<Timetable> timetable = new List<Timetable>();
         public static void CreateTimetable()
         {
-            List<Timetable> timetable = new List<Timetable>();
             Random rnd = new Random();
             foreach (var osztaly in Authorization.osztalyok)
             {
@@ -32,11 +34,19 @@ namespace Kreta1._0
                 {
                     for (int hour = 1; hour <= 8; hour++)
                     {
+                        int terem = 100;
+                        terem++;
                         Tanar randomTeacher = Authorization.tanarList[rnd.Next(0, Authorization.tanarList.Count)];
-                        string subject = randomTeacher.tantargy; 
-                        string teacher = randomTeacher.ToString();
-
-                        timetable.Add(new Timetable(osztaly, day, subject, hour.ToString(), teacher));
+                        string subject = randomTeacher.tantargy;
+                        string teacher = randomTeacher.Name;
+                        while (timetable.Any(x => x.DayOfWeek == day && x.HourOfDay == hour && (x.Teacher == teacher || x.Terem == terem)))
+                        {
+                            terem++;
+                            randomTeacher = Authorization.tanarList[rnd.Next(0, Authorization.tanarList.Count)];
+                            subject = randomTeacher.tantargy;
+                            teacher = randomTeacher.Name;
+                        }
+                        timetable.Add(new Timetable(osztaly, day, subject, terem, hour, teacher));
                     }
                 }
             }
