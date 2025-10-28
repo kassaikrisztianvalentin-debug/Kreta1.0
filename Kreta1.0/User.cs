@@ -331,7 +331,17 @@ namespace Kreta1._0
             Timetable.CreateTimetable();
             List<string> timetablestring = new List<string>();
             List<Action> timetableparancs = new List<Action>();
-            timetablestring.Add("\tHétfő\t|\tKedd\t|\tSzerda\t|\tCsütörtök\t|\tPéntek");
+            string[] napokHu = new[] { "Hétfő", "Kedd", "Szerda", "Csütörtök", "Péntek" };
+            Console.Write("Óra", 5);
+
+            foreach (var nap in napokHu)
+            {
+                Console.WriteLine($"{nap, -20}");
+            }
+            for (int i = 0; i < 50; i++)
+            {
+                Console.Write("-");
+            }
             foreach (var item in Timetable.timetable)
             {
                 if (item.Osztaly == osztaly)
@@ -348,8 +358,8 @@ namespace Kreta1._0
                         }
                     }
                 }
-                Menu.menu(this, timetablestring, timetableparancs, timetableparancs.Count);
             }
+            Menu.menu(this, timetablestring, timetableparancs, timetableparancs.Count);
         }
         public override string ToString()
         {
