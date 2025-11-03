@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -332,16 +333,13 @@ namespace Kreta1._0
             List<string> timetablestring = new List<string>();
             List<Action> timetableparancs = new List<Action>();
             string[] napokHu = new[] { "Hétfő", "Kedd", "Szerda", "Csütörtök", "Péntek" };
-            Console.Write("Óra", 5);
-
+            string napok = "";
             foreach (var nap in napokHu)
             {
-                Console.WriteLine($"{nap, -20}");
+                napok += $"{nap, -40}";
             }
-            for (int i = 0; i < 50; i++)
-            {
-                Console.Write("-");
-            }
+            timetablestring.Add(napok);
+            timetableparancs.Add(null);
             foreach (var item in Timetable.timetable)
             {
                 if (item.Osztaly == osztaly)
@@ -352,7 +350,7 @@ namespace Kreta1._0
                         {
                             if (item.DayOfWeek == day && item.HourOfDay == hour)
                             {
-                                timetablestring.Add($"{hour}{item.Teacher}\n{item.Osztaly}\n{item.DayOfWeek}:{item.HourOfDay}\n{item.Terem}\n{item.Subject}");
+                                timetablestring.Add($"  {item.Teacher}\n{hour} {item.Osztaly} {item.DayOfWeek}:{item.HourOfDay} \n  {item.Terem} {item.Subject}\n");
                                 timetableparancs.Add(() => Timetablea(osztaly));
                             }
                         }

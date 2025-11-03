@@ -35,18 +35,27 @@ namespace Kreta1._0
                 switch (Console.ReadKey(true).Key)
                 {
                     case ConsoleKey.UpArrow:
-                        index--;
-                        if (index < 0) index = hossz - 1;
+                        do
+                        {
+                            index--;
+                            if (index < 0) index = hossz - 1;
+                        } while(menuP[index] == null);
                         break;
 
                     case ConsoleKey.DownArrow:
-                        index++;
-                        if (index >= hossz) index = 0;
+                        do
+                        {
+                           index++;
+                            if (index >= hossz) index = 0;
+                        } while (menuP[index] == null);
                         break;
 
                     case ConsoleKey.Enter:
-                        menuP[index].Invoke();
-                        beker = false;
+                        if (menuP[index] != null)
+                        {
+                            menuP[index].Invoke();
+                            beker = false;
+                        }
                         break;
                     default:
                         continue;
