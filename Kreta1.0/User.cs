@@ -355,12 +355,17 @@ namespace Kreta1._0
                     //        }
                     //    }
                     //}
+
                     for (int hour = 1; hour <= 8; hour++)
                     {
                         foreach (var day in new[] { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" })
                         {
                             if (item.DayOfWeek == day && item.HourOfDay == hour)
                             {
+                                if (item.DayOfWeek == "Tuesday")
+                                {
+                                    Console.SetCursorPosition(50, 2);
+                                }
                                 timetablestring.Add($"  {item.Teacher}\n{hour} {item.Osztaly} {item.DayOfWeek}:{item.HourOfDay} \n  {item.Terem} {item.Subject}\n");
                                 timetableparancs.Add(() => Timetablea(osztaly));
                             }
