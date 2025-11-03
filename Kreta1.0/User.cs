@@ -344,9 +344,20 @@ namespace Kreta1._0
             {
                 if (item.Osztaly == osztaly)
                 {
-                    foreach (var day in new[] { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" })
+                    //foreach (var day in new[] { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" })
+                    //{
+                    //    for (int hour = 1; hour <= 8; hour++)
+                    //    {
+                    //        if (item.DayOfWeek == day && item.HourOfDay == hour)
+                    //        {
+                    //            timetablestring.Add($"  {item.Teacher}\n{hour} {item.Osztaly} {item.DayOfWeek}:{item.HourOfDay} \n  {item.Terem} {item.Subject}\n");
+                    //            timetableparancs.Add(() => Timetablea(osztaly));
+                    //        }
+                    //    }
+                    //}
+                    for (int hour = 1; hour <= 8; hour++)
                     {
-                        for (int hour = 1; hour <= 8; hour++)
+                        foreach (var day in new[] { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" })
                         {
                             if (item.DayOfWeek == day && item.HourOfDay == hour)
                             {
