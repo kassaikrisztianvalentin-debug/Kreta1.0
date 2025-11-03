@@ -360,6 +360,7 @@ namespace Kreta1._0
                     {
                         foreach (var day in new[] { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" })
                         {
+
                             if (item.DayOfWeek == day && item.HourOfDay == hour)
                             {
                                 if (item.DayOfWeek == "Tuesday")
@@ -374,6 +375,7 @@ namespace Kreta1._0
                 }
             }
             Menu.menu(this, timetablestring, timetableparancs, timetableparancs.Count);
+            Menu.TimetableMenu(osztaly);
         }
         public override string ToString()
         {

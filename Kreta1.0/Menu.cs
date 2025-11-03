@@ -62,5 +62,31 @@ namespace Kreta1._0
                 }
             }
         }
+        public static void TimetableMenu(string osztaly)
+        {
+            string[] napokHu = new[] { "Hétfő", "Kedd", "Szerda", "Csütörtök", "Péntek" };
+            Console.WriteLine("Óra");
+            foreach (var nap in napokHu)
+            {
+                Console.WriteLine($"{nap, -20}");
+            }
+            foreach (var item in Timetable.timetable)
+            {
+                if (item.Osztaly == osztaly)
+                {
+                    for (int hour = 1; hour <= 8; hour++)
+                    {
+                        foreach (var day in new[] { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" })
+                        {
+                            if (item.DayOfWeek == day && item.HourOfDay == hour)
+                            {
+
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
     }
 }
