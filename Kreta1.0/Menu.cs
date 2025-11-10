@@ -63,6 +63,7 @@ namespace Kreta1._0
                 }
             }
         }
+
         public static void TimetableMenu(string osztaly)
         {
             int index = 0;
