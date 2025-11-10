@@ -330,51 +330,50 @@ namespace Kreta1._0
         void Timetablea(string osztaly)
         {
             Timetable.CreateTimetable();
-            List<string> timetablestring = new List<string>();
-            List<Action> timetableparancs = new List<Action>();
-            string[] napokHu = new[] { "Hétfő", "Kedd", "Szerda", "Csütörtök", "Péntek" };
-            string napok = "";
-            foreach (var nap in napokHu)
-            {
-                napok += $"{nap, -40}";
-            }
-            timetablestring.Add(napok);
-            timetableparancs.Add(null);
-            foreach (var item in Timetable.timetable)
-            {
-                if (item.Osztaly == osztaly)
-                {
-                    //foreach (var day in new[] { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" })
-                    //{
-                    //    for (int hour = 1; hour <= 8; hour++)
-                    //    {
-                    //        if (item.DayOfWeek == day && item.HourOfDay == hour)
-                    //        {
-                    //            timetablestring.Add($"  {item.Teacher}\n{hour} {item.Osztaly} {item.DayOfWeek}:{item.HourOfDay} \n  {item.Terem} {item.Subject}\n");
-                    //            timetableparancs.Add(() => Timetablea(osztaly));
-                    //        }
-                    //    }
-                    //}
+            //List<string> timetablestring = new List<string>();
+            //List<Action> timetableparancs = new List<Action>();
+            //string[] napokHu = new[] { "Hétfő", "Kedd", "Szerda", "Csütörtök", "Péntek" };
+            //string napok = "";
+            //foreach (var nap in napokHu)
+            //{
+            //    napok += $"{nap, -40}";
+            //}
+            //timetablestring.Add(napok);
+            //timetableparancs.Add(null);
+            //foreach (var item in Timetable.timetable)
+            //{
+            //    if (item.Osztaly == osztaly)
+            //    {
+            //        //foreach (var day in new[] { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" })
+            //        //{
+            //        //    for (int hour = 1; hour <= 8; hour++)
+            //        //    {
+            //        //        if (item.DayOfWeek == day && item.HourOfDay == hour)
+            //        //        {
+            //        //            timetablestring.Add($"  {item.Teacher}\n{hour} {item.Osztaly} {item.DayOfWeek}:{item.HourOfDay} \n  {item.Terem} {item.Subject}\n");
+            //        //            timetableparancs.Add(() => Timetablea(osztaly));
+            //        //        }
+            //        //    }
+            //        //}
 
-                    for (int hour = 1; hour <= 8; hour++)
-                    {
-                        foreach (var day in new[] { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" })
-                        {
+            //        for (int hour = 1; hour <= 8; hour++)
+            //        {
+            //            foreach (var day in new[] { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" })
+            //            {
 
-                            if (item.DayOfWeek == day && item.HourOfDay == hour)
-                            {
-                                if (item.DayOfWeek == "Tuesday")
-                                {
-                                    Console.SetCursorPosition(50, 2);
-                                }
-                                timetablestring.Add($"  {item.Teacher}\n{hour} {item.Osztaly} {item.DayOfWeek}:{item.HourOfDay} \n  {item.Terem} {item.Subject}\n");
-                                timetableparancs.Add(() => Timetablea(osztaly));
-                            }
-                        }
-                    }
-                }
-            }
-            Menu.menu(this, timetablestring, timetableparancs, timetableparancs.Count);
+            //                if (item.DayOfWeek == day && item.HourOfDay == hour)
+            //                {
+            //                    if (item.DayOfWeek == "Tuesday")
+            //                    {
+            //                        Console.SetCursorPosition(50, 2);
+            //                    }
+            //                    timetablestring.Add($"  {item.Teacher}\n{hour} {item.Osztaly} {item.DayOfWeek}:{item.HourOfDay} \n  {item.Terem} {item.Subject}\n");
+            //                    timetableparancs.Add(() => Timetablea(osztaly));
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
             Menu.TimetableMenu(osztaly);
         }
         public override string ToString()
