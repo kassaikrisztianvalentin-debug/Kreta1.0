@@ -66,64 +66,63 @@ namespace Kreta1._0
         public static void TimetableMenu(string osztaly)
         {
             int index = 0;
-            string[] napokHu = new[] { "Hétfő", "Kedd", "Szerda", "Csütörtök", "Péntek" };
+            string[] napokHu = new[] { "Hétfő", "Kedd", "Szerda", "Csütörtök", "Péntek" }; 
+            string[] napokEng = new[] { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" };
             List<Timetable> orak = new List<Timetable>();
             List<Action> orakAction = new List<Action>();
-            Console.WriteLine("Óra");
+            Timetable[,] orakMatrix = new Timetable[5, 8];
             foreach (var item in Timetable.timetable)
             {
                 if (item.Osztaly == osztaly)
                 {
-                    for (int hour = 1; hour <= 8; hour++)
+                    int napIndex = Array.IndexOf(napokEng, item.DayOfWeek);
+                    int oraIndex = item.HourOfDay - 1;
+                    if (napIndex >= 0 && oraIndex >= 0 && oraIndex < 8)
                     {
-                        foreach (var day in new[] { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" })
-                        {
-                            if (item.DayOfWeek == day && item.HourOfDay == hour)
-                            {
-                                orak.Add(item);
-                            }
-                        }
+                        orakMatrix[napIndex, oraIndex] = item;
+                        orak.Add(item);
                     }
                 }
             }
             Console.WriteLine(orak.Count);
 
-            void Timetablekiiras()
+            void Timetablekiirass()
             {
                 foreach (var item in napokHu)
                 {
-                    Console.Write($"{item, -20}");
+                    Console.Write($"{item,-25}");
                 }
                 Console.WriteLine();
-                for (int i = 0; i < orak.Count; i++)
+                for (int i = 0; i < 100; i++)
                 {
-                    if (index == i)
-                        Console.ForegroundColor = ConsoleColor.Green;
-                    else
-                        Console.ForegroundColor = ConsoleColor.White;
-                    for (int k = 0; k < 8; k++)
-                    {
-                        if (i % 8 == 0 || i == 0)
-                        {
-                            for (int l = 0; l < 4; l++)
-                            {
-                                Console.Write($"{orak[i + l * 8+k].Subject}({orak[i + l * 8+k].Teacher}, {orak[i + l * 8+k].Terem}, {orak[i + l * 8+k].HourOfDay}:{orak[i + l * 8+k].DayOfWeek})\t");
-                            }
-                        }
-                        Console.WriteLine();
-                    }
+                    Console.Write('-');
+                }
+                Console.WriteLine();
 
-                    Console.WriteLine();
+                for (int i = 0; i < orakMatrix.GetLength(1); i++)
+                {
+                    for (int j = 0; j < orakMatrix.GetLength(0); j++)
+                    {
+                        if (index == i)
+                            Console.ForegroundColor = ConsoleColor.Green;
+                        else
+                            Console.ForegroundColor = ConsoleColor.White;
+                        Console.Write($"{orakMatrix[j, i].Subject}, {orakMatrix[j, i].Teacher}:{orakMatrix[j, i].Terem, -20}");
+                        Console.ForegroundColor = ConsoleColor.White;
+                        if (orakMatrix[j, i].DayOfWeek == "Friday")
+                        {
+                            Console.WriteLine();
+                        }
+                    }
                 }
                 Console.ForegroundColor = ConsoleColor.White;
 
-
             }
-            bool beker = true;
+        bool beker = true;
             while (beker)
             {
                 Console.Clear();
-                Timetablekiiras();
+                Timetablekiirass();
 
                 switch (Console.ReadKey(true).Key)
                 {
