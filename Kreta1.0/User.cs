@@ -382,4 +382,274 @@ namespace Kreta1._0
             return $"Név: {Name}\nFelhasználónév: {Username}\nJelszó: {Password}Tantárgy: {tantargy}";
         }
     }
+    public class Admin : User
+    {
+        public static List<string> adminmenupontok = new List<string>() { "Osztályok", "Adataim", "Kijelentkezés", "Kilépés" };
+        public List<Action> parancs = new List<Action>();
+        public Admin(string username, string password, string name)
+            : base(username, password, "Admin", name)
+        {
+            parancs.Add(() => osztalyok());
+            parancs.Add(() => this.ToString());
+            parancs.Add(() => Program.bejelentkezes());
+            parancs.Add(() =>
+            {
+                Save.mentes(Tanulo.jegyek);
+                Save.mentes(Tanulo.Intok);
+                Environment.Exit(0);
+            });
+        }
+        void osztalyok()
+        {
+            List<string> osztalykiiras = new List<string>();
+            List<Action> osztalyparancs = new List<Action>();
+            foreach (var item in Authorization.osztalyok)
+            {
+                osztalyparancs.Add(() => tanuloOsztaly(item));
+            }
+            foreach (var item in Authorization.osztalyok)
+            {
+                osztalykiiras.Add(item);
+            }
+            osztalykiiras.Add("Vissza");
+            osztalyparancs.Add(() => Menu.menu(this, Admin.adminmenupontok, this.parancs, Admin.adminmenupontok.Count));
+            Menu.menu(this, osztalykiiras, osztalyparancs, osztalyparancs.Count);
+        }
+        //NINCS KÉSZ__________________________________________________________________________________________________________________________________________________________________________________________
+        void tanarok()
+        {
+
+        }
+        //NINCS KÉSZ__________________________________________________________________________________________________________________________________________________________________________________________
+        void tanuloOsztaly(string Osztaly)
+        {
+            List<string> tanuloosztalyszerint = new List<string>();
+            List<Action> tanuloosztalyparancs = new List<Action>();
+            Console.WriteLine($"{Osztaly} osztály");
+            foreach (var item in Authorization.tanuloList)
+            {
+                if (item.Osztaly == Osztaly)
+                {
+                    tanuloosztalyszerint.Add(item.Name);
+                    tanuloosztalyparancs.Add(() => tanuloFunkciok(item));
+                }
+            }
+            tanuloosztalyszerint.Add("Órarend");
+            tanuloosztalyparancs.Add(() => Timetablea(Osztaly));
+            tanuloosztalyszerint.Add("Vissza");
+            tanuloosztalyparancs.Add(() => osztalyok());
+            Menu.menu(this, tanuloosztalyszerint, tanuloosztalyparancs, tanuloosztalyparancs.Count);
+        }
+        void tanuloFunkciok(Tanulo tanulo)
+        {
+            List<string> tanulofunkciokkiiras = new List<string>() { "Jegybeírás", "Intő", "Mulasztás", "Jegyek", "Vissza" };
+            List<Action> tanulofunkciokparancs = new List<Action>() { () => jegybeiras(tanulo), () => Into(tanulo), () => mulasztas(), () => tanuloJegyek(tanulo), () => osztalyok() };
+            Menu.menu(this, tanulofunkciokkiiras, tanulofunkciokparancs, tanulofunkciokparancs.Count);
+        }
+        void tanuloJegyek(Tanulo tanulo)
+        {
+            List<string> jegyekkiiras = new List<string>();
+            List<Action> jegyekparancs = new List<Action>();
+            foreach (var item in Tanulo.jegyek)
+            {
+                if (item.TanuloNeve == tanulo.Name)
+                {
+                    jegyekkiiras.Add($"{item.Tantargy}  -  {item.Datum:d}  -  {item.TanarNeve}  -  {item.Ertek}");
+                    jegyekparancs.Add(() => jegyFunkciok(item));
+                }
+            }
+            Console.WriteLine();
+            jegyekkiiras.Add($"Vissza");
+            jegyekparancs.Add(() => osztalyok());
+            Menu.menu(this, jegyekkiiras, jegyekparancs, jegyekparancs.Count);
+        }
+        // static List<Jegy> jegyek = new List<Jegy>();
+        #region jegy
+        void jegybeiras(Tanulo tanulo)
+        {
+            Console.Write("Kérem a jegyet (1-5): ");
+            int jegy = int.Parse(Console.ReadLine());
+            Tanulo.jegyek.Add(new Jegy(jegyTantargyKivalasztas(), jegy, DateTime.Now, this.Name, tanulo.Name));
+            Console.WriteLine("Sikeres jegybeírás!");
+            Thread.Sleep(1000);
+            tanuloFunkciok(tanulo);
+        }
+        string jegyTantargyKivalasztas()
+        {
+            string tantargy = "";
+            List<string> jegyekkiiras = new List<string>();
+            List<Action> jegyekparancs = new List<Action>();
+            foreach (var item in Authorization.tantagyak)
+            {
+                jegyekkiiras.Add($"{item}");
+                jegyekparancs.Add(() => jegyTantargyValasztas(item));
+                
+            }
+            void jegyTantargyValasztas(string item){
+                tantargy = item;
+            }
+            Console.WriteLine();
+            jegyekkiiras.Add($"Vissza");
+            jegyekparancs.Add(() => osztalyok());
+            Menu.menu(this, jegyekkiiras, jegyekparancs, jegyekparancs.Count);
+            return tantargy;
+        }
+        void jegyFunkciok(Jegy jegy)
+        {
+            Console.Clear();
+            List<string> jegyFunkciokiiras = new List<string>() { "Jegy módosítása", "Jegy törlése", "Vissza" };
+            List<Action> jegyFunkcioparancs = new List<Action>() { () => jegyModositas(jegy), () => jegyTorles(jegy), () => osztalyok() };
+            Menu.menu(this, jegyFunkciokiiras, jegyFunkcioparancs, jegyFunkcioparancs.Count);
+        }
+        void jegyModositas(Jegy jegy)
+        {
+            Console.Write("Kérem az új jegyet (1-5): ");
+            int ujJegy = int.Parse(Console.ReadLine());
+            jegy.Ertek = ujJegy;
+            Console.WriteLine("Sikeres jegymódosítás!");
+            Thread.Sleep(1000);
+            osztalyok();
+        }
+        void jegyTorles(Jegy jegy)
+        {
+            Tanulo.jegyek.Remove(jegy);
+            Tanulo.jegyek.Remove(jegy);
+            Console.WriteLine("Sikeres jegytörlés!");
+            Thread.Sleep(1000);
+            osztalyok();
+        }
+        #endregion
+
+        void mulasztas()
+        {
+            //mulasztás beírás logika
+        }
+        #region into
+        void Into(Tanulo tanulo)
+        {
+            List<string> intokkiiras = new List<string>() { "Beírás", "Tanuló intői", "Vissza" };
+            List<Action> intokparancs = new List<Action>() { () => Intobeiras(tanulo), () => IntoKiiras(tanulo), () => tanuloFunkciok(tanulo) };
+            Menu.menu(this, intokkiiras, intokparancs, intokparancs.Count);
+        }
+        void Intobeiras(Tanulo tanulo)
+        {
+            Console.Clear();
+            string[] intok = new string[] { "Szóbeli intő", "Osztályfőnöki intő", "Szakmai tanári intő", "Igazgatói intő", "Igazgatói megrovás" };
+            Console.WriteLine("1. Szóbeli intő\n2. Osztályfőnöki intő\n3. Szakmai tanári intő\n4. Igazgatói intő\n5. Igazgatói megrovás");
+            int beInto = int.Parse(Console.ReadLine());
+            Console.Write("A beírás szövege: ");
+            string szoveg = Console.ReadLine();
+            Tanulo.Intok.Add(new Into(this.Name, tanulo.Name, DateTime.Now, szoveg, intok[beInto - 1]));
+            Console.WriteLine("Sikeres rögzítés!");
+            Thread.Sleep(1000);
+            osztalyok();
+        }
+        void IntoKiiras(Tanulo tanulo)
+        {
+            List<string> intokkiirasstring = new List<string>();
+            List<Action> intokparancs = new List<Action>();
+            foreach (var item in Tanulo.Intok)
+            {
+                if (item.TanuloNeve == tanulo.Name)
+                {
+                    intokkiirasstring.Add($"{item.TanarNeve} - {item.Datum} - {item.Fokozat} - {item.Szoveg}");
+                    intokparancs.Add(() => intoFunkciok(item));
+                }
+            }
+            intokkiirasstring.Add("Vissza");
+            intokparancs.Add(() => tanuloFunkciok(tanulo));
+            Menu.menu(this, intokkiirasstring, intokparancs, intokparancs.Count);
+        }
+        void intoFunkciok(Into into)
+        {
+            Console.Clear();
+            List<string> jegyFunkciokiiras = new List<string>() { "Jegy módosítása", "Jegy törlése", "Vissza" };
+            List<Action> jegyFunkcioparancs = new List<Action>() { () => intoModositas(into), () => intoTorles(into), () => osztalyok() };
+            Menu.menu(this, jegyFunkciokiiras, jegyFunkcioparancs, jegyFunkcioparancs.Count);
+        }
+        void intoModositas(Into into)
+        {
+            string[] intok = new string[] { "Szóbeli intő", "Osztályfőnöki intő", "Szakmai tanári intő", "Igazgatói intő", "Igazgatói megrovás" };
+            Console.WriteLine("1. Szóbeli intő\n2. Osztályfőnöki intő\n3. Szakmai tanári intő\n4. Igazgatói intő\n5. Igazgatói megrovás");
+            int beInto = int.Parse(Console.ReadLine());
+            into.Fokozat = intok[beInto - 1];
+            Console.Write("Szöveg: ");
+            string szoveg = Console.ReadLine();
+            into.Fokozat = szoveg;
+            Console.WriteLine("Sikeres jegymódosítás!");
+            Thread.Sleep(1000);
+            osztalyok();
+        }
+        void intoTorles(Into into)
+        {
+            Tanulo.Intok.Remove(into);
+            Tanulo.Intok.Remove(into);
+            Console.WriteLine("Sikeres jegytörlés!");
+            Thread.Sleep(1000);
+            osztalyok();
+        }
+        #endregion
+        //NINCS KÉSZ__________________________________________________________________________________________________________________________________________________________________________________________
+        void ujFelhasznalo()
+        {
+            //új felhasználó létrehozás logika
+        }
+        //NINCS KÉSZ__________________________________________________________________________________________________________________________________________________________________________________________
+        void Timetablea(string osztaly)
+        {
+            Timetable.CreateTimetable();
+            List<string> timetablestring = new List<string>();
+            List<Action> timetableparancs = new List<Action>();
+            string[] napokHu = new[] { "Hétfő", "Kedd", "Szerda", "Csütörtök", "Péntek" };
+            string napok = "";
+            foreach (var nap in napokHu)
+            {
+                napok += $"{nap,-40}";
+            }
+            timetablestring.Add(napok);
+            timetableparancs.Add(null);
+            foreach (var item in Timetable.timetable)
+            {
+                if (item.Osztaly == osztaly)
+                {
+                    //foreach (var day in new[] { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" })
+                    //{
+                    //    for (int hour = 1; hour <= 8; hour++)
+                    //    {
+                    //        if (item.DayOfWeek == day && item.HourOfDay == hour)
+                    //        {
+                    //            timetablestring.Add($"  {item.Teacher}\n{hour} {item.Osztaly} {item.DayOfWeek}:{item.HourOfDay} \n  {item.Terem} {item.Subject}\n");
+                    //            timetableparancs.Add(() => Timetablea(osztaly));
+                    //        }
+                    //    }
+                    //}
+
+                    for (int hour = 1; hour <= 8; hour++)
+                    {
+                        foreach (var day in new[] { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" })
+                        {
+
+                            if (item.DayOfWeek == day && item.HourOfDay == hour)
+                            {
+                                if (item.DayOfWeek == "Tuesday")
+                                {
+                                    Console.SetCursorPosition(50, 2);
+                                }
+                                timetablestring.Add($"  {item.Teacher}\n{hour} {item.Osztaly} {item.DayOfWeek}:{item.HourOfDay} \n  {item.Terem} {item.Subject}\n");
+                                timetableparancs.Add(() => Timetablea(osztaly));
+                            }
+                        }
+                    }
+                }
+            }
+            Menu.menu(this, timetablestring, timetableparancs, timetableparancs.Count);
+            Menu.TimetableMenu(osztaly);
+        }
+        public override string ToString()
+        {
+            return $"Név: {Name}\nFelhasználónév: {Username}\nJelszó: {Password}";
+        }
+    }
+
+
 }
