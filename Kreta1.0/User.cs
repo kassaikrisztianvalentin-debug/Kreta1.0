@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading;
@@ -13,7 +14,7 @@ namespace Kreta1._0
     {
         public string Name { get; set; }
         public string Username { get; set; }
-        public string Password { get; }
+        public string Password { get; protected set; }
         public string Role { get; protected set; }
 
         public User(string username, string password, string role, string name)
@@ -384,12 +385,11 @@ namespace Kreta1._0
     }
     public class Admin : User
     {
-        public static List<string> adminmenupontok = new List<string>() { "Osztályok", "Adataim", "Kijelentkezés", "Kilépés" };
+        public static List<string> adminmenupontok = new List<string>() { "Adataim", "Kijelentkezés", "Kilépés" };
         public List<Action> parancs = new List<Action>();
         public Admin(string username, string password, string name)
             : base(username, password, "Admin", name)
         {
-            parancs.Add(() => osztalyok());
             parancs.Add(() => this.ToString());
             parancs.Add(() => Program.bejelentkezes());
             parancs.Add(() =>
@@ -399,6 +399,130 @@ namespace Kreta1._0
                 Environment.Exit(0);
             });
         }
+        #region admin funkciók
+        //NINCS KÉSZ__________________________________________________________________________________________________________________________________________________________________________________________
+        
+        void tanarok()
+        {
+            List<string> tanarkiiras = new List<string>();
+            List<Action> tanarparancs = new List<Action>();
+            Console.WriteLine($"Tanárok");
+            foreach (var item in Authorization.tanarList)
+            {
+                
+                tanarkiiras.Add(item.Name);
+                tanarparancs.Add(() => tanarFunkciok(item));
+                
+            }
+            tanarkiiras.Add("Tanár hozzáadása");
+            tanarparancs.Add(() => tanarHozzaadas());
+            tanarkiiras.Add("Vissza");
+            tanarparancs.Add(() => osztalyok());
+            Menu.menu(this, tanarkiiras, tanarparancs, tanarparancs.Count);
+        }
+        void tanarHozzaadas()
+        {
+            Console.Clear();
+            Console.Write("Név: ");
+            string nev = Console.ReadLine();
+            Console.Write("Jelszó: ");
+            string jelszo = Console.ReadLine();
+            Console.Write("Tantárgy: ");
+            string tantargy = Console.ReadLine();
+            string felhasznalonev = nev.Trim().ToLower();
+            Authorization.tanarList.Add(new Tanar(felhasznalonev, jelszo, nev, tantargy));
+            Console.WriteLine("Sikeres hozzáadás!");
+            Thread.Sleep(1000);
+            tanarok();
+        }
+        void tanarFunkciok(Tanar tanar)
+        {
+            //List<string> tanulofunkciokkiiras = new List<string>() { "Név Modositása", "Jelszó Modositása", "Tanitott Tantárgy Modositása", "Felhasználónév Modositása", "Törlés", "Vissza" };
+            //List<Action> tanulofunkciokparancs = new List<Action>() { () => tanarNevModositas(tanar), () => tanarJelszoModositas(tanar), () => tanarTantargyModositas(tanar), () => tanarTorles(tanar), () => tanarok() };
+
+            List<string> tanulofunkciokkiiras = new List<string>() { "Név Modositása", "Tanitott Tantárgy Modositása", "Felhasználónév Modositása", "Törlés", "Vissza" };
+            List<Action> tanulofunkciokparancs = new List<Action>() { () => tanarNevModositas(tanar), () => tanarTantargyModositas(tanar), () => tanarTorles(tanar), () => tanarok() };
+            Menu.menu(this, tanulofunkciokkiiras, tanulofunkciokparancs, tanulofunkciokparancs.Count);
+        }
+        void tanarNevModositas(Tanar tanar)
+        {
+            Console.Clear();
+            Console.WriteLine($"Jelenlegi név: {tanar.Name}");
+            Console.Write($"Új név: ");
+            string ujNev = Console.ReadLine();
+            tanar.Name = ujNev;
+            Console.WriteLine("Sikeres Váltosztatás");
+            Thread.Sleep(1000);
+            tanarFunkciok(tanar);
+        }
+        //void tanarJelszoModositas(Tanar tanar)
+        //{
+        //    Console.Clear();
+        //    Console.WriteLine($"Jelenlegi jelszó: {tanar.Password}");
+        //    Console.Write($"Új jelszó: ");
+        //    string ujJelszo = Console.ReadLine();
+        //    tanar.Password = ujJelszo;
+        //    Console.WriteLine("Sikeres Váltosztatás");
+        //    Thread.Sleep(1000);
+        //    tanarFunkciok(tanar);
+        //}
+        void tanarTantargyModositas(Tanar tanar)
+        {
+            Console.Clear();
+            Console.WriteLine($"Jelenlegi tanított tantárgy: {tanar.tantargy}");
+            Console.Write($"Új tanítandó tantárgy: ");
+            string ujtantargy = Console.ReadLine();
+            tanar.tantargy = ujtantargy;
+            Console.WriteLine("Sikeres Váltosztatás");
+            Thread.Sleep(1000);
+            tanarFunkciok(tanar);
+        }
+        void tanarTorles(Tanar tanar)
+        {
+            Console.Clear();
+            Console.WriteLine($"Törlésre kerül: {tanar.Name}");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"Biztos törli a felhasználót?");
+            Console.ForegroundColor = ConsoleColor.White;
+            string[] valaszok = new string[] { "Igen", "Nem" };
+            bool valasz = false;
+            int index = 0;
+            for (int i = 0; i < 2; i++)
+            {
+                if (index == i)
+                    Console.ForegroundColor = ConsoleColor.Red;
+                else
+                    Console.ForegroundColor = ConsoleColor.White;
+
+                Console.WriteLine(valaszok[i]);
+            }
+            Console.ForegroundColor = ConsoleColor.White;
+            bool beker = true;
+            while (beker)
+            {
+                switch (Console.ReadKey(true).Key)
+                {
+                    case ConsoleKey.UpArrow:
+                        index = 1;
+                        break;
+
+                    case ConsoleKey.DownArrow:
+                        index = 0;
+                        break;
+
+                    case ConsoleKey.Enter:
+                        valasz = index == 0 ? true : false;
+                        beker = false;
+                        break;
+                    default:
+                        continue;
+                }
+            }
+            if (valasz) Authorization.tanarList.Remove(tanar);
+            else tanarFunkciok(tanar);
+        }
+        //NINCS KÉSZ__________________________________________________________________________________________________________________________________________________________________________________________
+        #endregion
         void osztalyok()
         {
             List<string> osztalykiiras = new List<string>();
@@ -415,12 +539,6 @@ namespace Kreta1._0
             osztalyparancs.Add(() => Menu.menu(this, Admin.adminmenupontok, this.parancs, Admin.adminmenupontok.Count));
             Menu.menu(this, osztalykiiras, osztalyparancs, osztalyparancs.Count);
         }
-        //NINCS KÉSZ__________________________________________________________________________________________________________________________________________________________________________________________
-        void tanarok()
-        {
-
-        }
-        //NINCS KÉSZ__________________________________________________________________________________________________________________________________________________________________________________________
         void tanuloOsztaly(string Osztaly)
         {
             List<string> tanuloosztalyszerint = new List<string>();
