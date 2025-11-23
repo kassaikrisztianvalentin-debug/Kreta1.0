@@ -11,8 +11,45 @@ namespace Kreta1._0
     {
         public static void mentes<T>(List<T> lista)
         {
-            string fileName = typeof(T) == typeof(Jegy) ? "jegyek.txt" : "intok.txt";
-            bool fileType = typeof(T) == typeof(Jegy);
+            //string fileName = typeof(T) == typeof(Jegy) ? "jegyek.txt" : "intok.txt";
+            //bool fileType = typeof(T) == typeof(Jegy);
+            //using (StreamWriter sw = new StreamWriter(fileName))
+            //{
+            //    foreach (var item in lista)
+            //    {
+            //        if (item is Jegy jegy)
+            //        {
+            //            sw.WriteLine($"{jegy.Tantargy};{jegy.Ertek};{jegy.Datum};{jegy.TanarNeve};{jegy.TanuloNeve}");
+            //        }
+            //        else if (item is Into into)
+            //        {
+            //            sw.WriteLine($"{into.TanarNeve};{into.TanuloNeve};{into.Datum};{into.Szoveg};{into.Fokozat}");
+            //        }
+            //    }
+            //}
+
+            string fileName = "";
+            if (typeof(T) == typeof(Jegy))
+            {
+                fileName = "jegyek.txt";
+            }
+            else if (typeof(T) == typeof(Into))
+            {
+                fileName = "intok.txt";
+            }
+            else if (typeof(T) == typeof(Tanulo))
+            {
+                fileName = "diakok.txt";
+            }
+            else if (typeof(T) == typeof(Tanar))
+            {
+                fileName = "tanarok.txt";
+            }
+            else if (typeof(T) == typeof(Admin))
+            {
+                fileName = "adminok.txt";
+            }
+
             using (StreamWriter sw = new StreamWriter(fileName))
             {
                 foreach (var item in lista)
@@ -24,6 +61,18 @@ namespace Kreta1._0
                     else if (item is Into into)
                     {
                         sw.WriteLine($"{into.TanarNeve};{into.TanuloNeve};{into.Datum};{into.Szoveg};{into.Fokozat}");
+                    }
+                    else if (item is Tanulo tanulo)
+                    {
+                        sw.WriteLine($"{tanulo.Name};{tanulo.Osztaly};{tanulo.Password};{tanulo.Role};{tanulo.Username}");
+                    }
+                    else if (item is Tanar tanar)
+                    {
+                        sw.WriteLine($"{tanar.Password};{tanar.Name};{tanar.tantargy};{tanar.Role}");
+                    }
+                    else if (item is Admin admin)
+                    {
+                        sw.WriteLine($"{admin.Password};{admin.Name}; ;{admin.Role}");
                     }
                 }
             }
