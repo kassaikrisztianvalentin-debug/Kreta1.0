@@ -12,6 +12,8 @@ namespace Kreta1._0
         static void Main(string[] args)
         {
             Authorization.fileRead("diakok.txt");
+            Authorization.fileRead("tanarok.txt");
+            Authorization.fileRead("adminok.txt");
             Save.betolt("intok.txt");
             Save.betolt("jegyek.txt");
             bejelentkezes();
@@ -54,6 +56,18 @@ namespace Kreta1._0
                     else
                     {
                         Console.WriteLine("Hiba: A felhasználó nem Tanár típusú.");
+                    }
+                }
+                else if (feka.Role == "Admin")
+                {
+                    Admin admin = feka as Admin;
+                    if (admin != null)
+                    {
+                        Menu.menu(feka, Admin.adminmenupontok, admin.parancs, Admin.adminmenupontok.Count);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Hiba: A felhasználó nem Admin típusú.");
                     }
                 }
                 else

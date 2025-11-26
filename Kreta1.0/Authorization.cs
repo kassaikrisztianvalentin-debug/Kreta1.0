@@ -18,6 +18,7 @@ namespace Kreta1._0
         public static HashSet<string> tantagyak = new HashSet<string>();
 
         public static List<Tanar> tanarList = new List<Tanar>();
+        public static List<Admin> adminList = new List<Admin>();
         public static void fileRead(string Filepath)
         {
             string[] temp = File.ReadAllLines(Filepath);
@@ -26,7 +27,7 @@ namespace Kreta1._0
             {
                 string[] d = item.Split(';');
                 string role = d[3];
-                if (role == "Tanulo")
+                if (role == "Tanuló")
                 {
                     string name = d[0];
                     string osztaly = d[1];
@@ -36,7 +37,7 @@ namespace Kreta1._0
                     tanuloList.Add(new Tanulo(username, password, name, osztaly));
                     userList.Add(new Tanulo(username, password, name, osztaly));
                 }
-                else if (role == "Tanar")
+                else if (role == "Tanár")
                 {
                     string name = d[1];
                     string username = d[1].Trim().ToLower();
@@ -46,6 +47,15 @@ namespace Kreta1._0
                     tantagyak.Add(tantargy);
                     tanarList.Add(new Tanar(username, password, name, tantargy));
                     userList.Add(new Tanar(username, password, name, tantargy));
+                }
+                else if (role == "Admin")
+                {
+                    string name = d[1];
+                    string username = d[1].Trim().ToLower();
+                    string password = d[0];
+
+                    adminList.Add(new Admin(username, password, name));
+                    userList.Add(new Admin(username, password, name));
                 }
             }
         }

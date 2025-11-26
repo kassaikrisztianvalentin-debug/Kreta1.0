@@ -108,14 +108,3 @@ Bognár Lili;9.A;2010-03-28;Tanulo;82736451906
 Kovács Zoltán;9.A;2010-12-01;Tanulo;37482915607
 Tóth Blanka;9.A;2010-08-07;Tanulo;19283746508
 Fekete Gergő;9.A;2010-04-19;Tanulo;56473829109
-2;2;Fasztan;Tanar
-1975-03-12;Kovács Péter;Matematika;Tanar;
-1980-07-25;Nagy Éva;Történelem;Tanar;
-1978-11-04;Tóth Gábor;Fizika;Tanar;
-1982-02-17;Szabó Anna;Kémia;Tanar;
-1976-05-09;Varga László;Biológia;Tanar;
-1981-08-30;Kiss Júlia;Földrajz;Tanar;
-1979-01-23;Molnár Dániel;Informatika;Tanar;
-1983-06-15;Balogh Eszter;Rajz;Tanar;
-1977-12-02;Horváth Tamás;Testnevelés;Tanar;
-1980-04-19;Papp Réka;Angol;Tanar;
