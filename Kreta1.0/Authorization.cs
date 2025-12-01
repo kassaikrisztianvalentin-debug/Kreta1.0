@@ -27,7 +27,7 @@ namespace Kreta1._0
             {
                 string[] d = item.Split(';');
                 string role = d[3];
-                if (role == "Tanuló")
+                if (role == "Tanulo")
                 {
                     string name = d[0];
                     string osztaly = d[1];
@@ -37,7 +37,7 @@ namespace Kreta1._0
                     tanuloList.Add(new Tanulo(username, password, name, osztaly));
                     userList.Add(new Tanulo(username, password, name, osztaly));
                 }
-                else if (role == "Tanár")
+                else if (role == "Tanar")
                 {
                     string name = d[1];
                     string username = d[1].Trim().ToLower();
